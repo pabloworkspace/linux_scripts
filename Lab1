@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ "$#" != 2 ]; then #sprawdzamy czy ilosc arg wej jest rozna od 2
+	echo "Niepoprawna ilosc argumentow wejsciowych"
+	exit 1
+fi
+
+if [ ! -d $1 ] || [ ! -d $2 ]; then #sprawdzamy czy istnieja podane katalogi
+	echo "Nie znaleziono katalogu"
+	exit 2
+fi
+
+for file in `ls -a  $1`; do	#dla plikow w kat1 -a + ukryte
+	if [ ! -d $1/$file ]; then #jezeli istnieja pliki w kat1
+		if [ -e $2/$file ] && [ ! -d $2/$file ]; then
+		rm -rf $1/$file	   #usun pliki z kat1
+		fi
+	fi
+done

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ "$#" != 1 ]; then
+	echo "Brak podanego argumentu"
+	exit 1
+fi
+
+if [ ! -d $1 ]; then
+	echo "Znaleziono katalog"
+	exit 2
+fi
+for katalog in `ls -A $1`; do
+	if [  -d $1/$katalog ]; then
+	mv $1/$katalog/* $1/
+	rm -rf $1/$katalog
+	fi
+done 
