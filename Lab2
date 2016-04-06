@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#Wypisac czy w zadanym katalogu (paramter skryptu) jest więcej dowiązań symbolicznych poprawnych czy zdefiniowanych sciezką względną
+if [ "$#" !=1 ]; then
+	echo "Niepoprawna ilosc arg wejsciowych"
+	exit 1
+fi
+
+if [ ! -d $1]; then
+	echo "Nie znaleziono podanego katalogu"
+	exit 2
+fi
+
+l_pop= 0; #liczba dowiązań poprawnych
+l_wzg= 0; #liczba dowiązań względnych
+slash = "/"
+
+for file in `ls -a $1`; do
+	if [ ! -L $1/$file ]; then
+		if readlink -f $1 > /dev/null; then
+		l_pop= `expr $l_pop + 1`	
+		else
+		echo "Nie znaleziono poprawnych simlinkow"
+		fi
+	fi
+done
+for file in `ls -a $1`; do
+	cat -a $1/$file
+	if [ / = ${slash::1} ]; then
+	l_wzg= `expr $l_wzg + 1`
+	else
+	echo "Nie znaleziono sciezki wzglednej"
+	fi
+done
+if [ $l_pop -gt $l_wzg ]; then
+	echo "Więcej dowiązań poprawnych"
+	else
+	echo "Więcej dowiązań ze ścieżką względną"
+fi
+
+
+
+
