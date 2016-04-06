@@ -1,0 +1,40 @@
+#!/bin/bash
+#dane jest drzewo katalogowe oraz plik zwykly. Dla kazdego katalogu w drzewie
+#do ktorego my wykonawca skryptu mamy prawo odczytu. Wypisac jego sciezke 
+#kanoniczna, a dla kat z prawem zapisu wypisac prawa w wersji polskiej
+# Wyniki na ekran i do wspomnianego pliku
+
+if [ $# -ne 2 ]
+	echo "Niepoprawna ilosc argumentow"
+	exit 1
+fi
+if [ ! -d $1 ]
+then
+	echo "to nie jest katalog"
+	exit 2
+fi
+if [ ! -f $2 ]
+then
+	echo "to nie jest plik"
+	exit 3
+fi
+
+
+find -P $1 \( -writeable -readable -printf "wr %p %M \n" \) -or \( -writable -printf "w %p %M \n" \) -or \( -readable -printf "r %p %M \n" \) | while read type sciezka prawa
+do
+	if [ $type = "wr" ]
+	then
+		realpath $sciezka
+		echo "$prawa" | tx "rwx" "ozw"
+	fi
+	if [ $type = "w" ]
+	then
+		realpath $sciezka	
+	fi
+
+	if [ $type = "r" ]
+	then
+		echo "$prawa" | tx "rwx" "ozw"
+	fi
+	
+done | tee -a $2
