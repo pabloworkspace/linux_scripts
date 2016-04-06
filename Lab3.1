@@ -1,0 +1,17 @@
+
+#Skopiowac zadane drzewo katalogowe w zadane miejsce (katalog jako drugi parametr) uwzględniając pliku regularne, podkatalogi oraz dowiązania symboliczne. Dowiązania symboliczne w kopii powinny wskazywać na pierwotne obiekty. Proste użycie kopiowania całych drzew jest zakazane (cp ma kopiować pojedyncze pliki)
+
+#!/bin/bash
+
+if [ "$#" !=2 ]; then
+	echo "Brak podanych argumentow"
+	exit 1
+fi
+
+if [ ! -d $1 ]; then
+	echo "Nie znaleziono katalogu"
+	exit 2
+fi
+
+find $1 -exec cp --preserve=links -Lr {} $2 \;
+

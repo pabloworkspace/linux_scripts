@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ "$#" != 1 ]; then
+	echo "Niepoprawna ilosc agrumentow wejsciowych"
+	exit 1
+fi
+
+if [ ! -d $1 ]; then
+	echo "nie znaleziono katalogu"
+	exit 2
+fi
+
+find $1 -empty -mmin +1 -print
